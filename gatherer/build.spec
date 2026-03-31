@@ -3,19 +3,21 @@
 
 import sys
 from pathlib import Path
+from PyInstaller.utils.hooks import collect_all
 
 block_cipher = None
+
+ctk_datas, ctk_binaries, ctk_hiddenimports = collect_all('customtkinter')
 
 a = Analysis(
     ['main.py'],
     pathex=[str(Path('').resolve())],
-    binaries=[],
+    binaries=ctk_binaries,
     datas=[
         ('config.toml', '.'),
         ('icon.ico', '.'),
-    ],
-    hiddenimports=[
-        'customtkinter',
+    ] + ctk_datas,
+    hiddenimports=ctk_hiddenimports + [
         'tkinter',
         'tkinter.filedialog',
     ],
