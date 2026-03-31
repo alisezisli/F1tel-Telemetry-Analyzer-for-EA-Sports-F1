@@ -18,7 +18,9 @@ Record your sessions with the Windows desktop app, then upload the `.f1tel` file
 
 **Web dashboard** parses the file entirely in your browser - no data is ever sent to a server. Close the tab and it's gone.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/CJ3XDsM6Q3k?si=MI4FaEFe-06dMh5k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+## F1tel Demo Video
+
+[![F1tel Demo](https://img.youtube.com/vi/CJ3XDsM6Q3k/maxresdefault.jpg)](https://youtu.be/CJ3XDsM6Q3k)
 
 ---
 
