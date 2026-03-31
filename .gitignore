@@ -1,0 +1,4 @@
+gatherer/.venv/
+gatherer/__pycache__/
+gatherer/dist/
+gatherer/build/
