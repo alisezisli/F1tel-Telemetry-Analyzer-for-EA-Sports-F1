@@ -1,0 +1,9 @@
+[udp]
+# F1 2025 default UDP telemetry port
+# Must match: Game Settings → Telemetry → UDP Port
+host = "127.0.0.1"
+port = 20777
+
+[output]
+# Leave empty to use default: ~/Documents/f1tel/
+folder = ""
