@@ -96,6 +96,53 @@ export default function HomePage() {
         </p>
       </div>
 
+      <div className="w-full max-w-lg mb-4 flex justify-center">
+        <button
+          disabled={!!progress}
+          onClick={() => {
+            if (progress) return;
+            setError(null);
+            setProgress({ pct: 0, message: "Loading demo file..." });
+            fetch("/demo.f1tel")
+              .then((r) => {
+                if (!r.ok) throw new Error("Demo file not found on server.");
+                return r.arrayBuffer();
+              })
+              .then((buf) => {
+                const worker = new Worker(new URL("@/lib/telemetry/worker.ts", import.meta.url));
+                worker.onmessage = (e: MessageEvent<WorkerMsg>) => {
+                  const msg = e.data;
+                  if (msg.type === "progress") {
+                    setProgress({ pct: msg.pct, message: msg.message });
+                  } else if (msg.type === "done") {
+                    const id = crypto.randomUUID();
+                    storeSession(id, { data: msg.data, analytics: msg.analytics });
+                    worker.terminate();
+                    router.push(`/session?id=${id}`);
+                  } else if (msg.type === "error") {
+                    setError(msg.message);
+                    setProgress(null);
+                    worker.terminate();
+                  }
+                };
+                worker.postMessage({ type: "parse", buffer: buf }, [buf]);
+              })
+              .catch((e) => {
+                setError(e.message);
+                setProgress(null);
+              });
+          }}
+          className="text-sm px-4 py-1.5 rounded-lg border transition-colors disabled:opacity-40 disabled:cursor-default"
+          style={{
+            borderColor: "var(--accent)",
+            color: "var(--accent)",
+            background: "transparent",
+          }}
+        >
+          Try Demo
+        </button>
+      </div>
+
       <div
         className={[
           "w-full max-w-lg rounded-xl border-2 border-dashed transition-colors",
