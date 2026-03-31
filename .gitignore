@@ -1,4 +1,16 @@
+# Gatherer
 gatherer/.venv/
 gatherer/__pycache__/
 gatherer/dist/
 gatherer/build/
+
+# Web - dependencies
+web/node_modules/
+
+# Web - build outputs
+web/.next/
+
+# Web - env
+web/.env
+web/.env.local
+web/.env*.local
