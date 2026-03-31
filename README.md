@@ -6,6 +6,10 @@ Record your sessions with the Windows desktop app, then upload the `.f1tel` file
 
 **Live:** https://f1tel.gnuadm.in
 
+![Lap Summary](src/lap-summary.png "Lap Summary")
+
+*Lap Summary*
+
 ---
 
 ## How It Works
@@ -35,6 +39,10 @@ When done, click **Save** to save the `.f1tel` file.
 
 Go to [f1tel.gnuadm.in](https://f1tel.gnuadm.in), drop your file, and visualize your race.
 
+![F1 2025 Telemetry Settings](src/in-game-setting.png "F1 2025 Telemetry Settings")
+
+*F1 2025 Telemetry Settings*
+
 ---
 
 ## Dashboard Panels
@@ -61,3 +69,21 @@ Your `.f1tel` file never leaves your browser. The server only serves static file
 
 - **Gatherer:** Python 3.10+, CustomTkinter, PyInstaller
 - **Web:** Next.js 16, TypeScript, Tailwind CSS, Recharts, Web Worker
+
+## Demo
+
+![Sector Analysis](src/sector-analysis.png "Sector Analysis")
+
+*Sector Analysis: Fastest S2 and S3 times on lap 6, right after pit stop.*
+
+![Speed Trace](src/speed-trace.PNG "Speed Trace")
+
+*Speed Trace: Speed comparison between 1st lap, fastest (2nd) lap and last lap (light rain).*
+
+![Tyre Wear](src/tyre-wear.PNG "Tyre Wear")
+
+*Tyre Wear: Front Left tyre is degrading faster than expected.*
+
+![Stint Comparison](src/stint-comparison.PNG "Stint Comparison")
+
+*Stint Comparison: Cost of intermediate tyres. Fast performance loss with soft tyres.*
