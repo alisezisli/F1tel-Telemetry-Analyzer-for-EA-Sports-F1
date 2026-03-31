@@ -6,7 +6,7 @@ Record your sessions with the Windows desktop app, then upload the `.f1tel` file
 
 **Live:** https://f1tel.gnuadm.in
 
-![Lap Summary](src/lap-summary.png "Lap Summary")
+![Lap Summary](src/lap-summary.PNG "Lap Summary")
 
 *Lap Summary*
 
