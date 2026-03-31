@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+  <rect width="20" height="20" rx="3" fill="#E10600"/>
+  <!-- F: vertical bar -->
+  <rect x="2" y="2" width="3" height="16" fill="white"/>
+  <!-- F: top horizontal -->
+  <rect x="2" y="2" width="11" height="3" fill="white"/>
+  <!-- F: middle horizontal -->
+  <rect x="2" y="8" width="9" height="3" fill="white"/>
+  <!-- 1: vertical bar -->
+  <rect x="15" y="2" width="3" height="16" fill="white"/>
+  <!-- 1: top-left serif -->
+  <rect x="12" y="5" width="3" height="3" fill="white"/>
+</svg>
