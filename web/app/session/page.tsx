@@ -76,9 +76,9 @@ function SessionContent() {
   const { session, player } = data;
 
   return (
-    <main className="min-h-screen px-6 py-8 pr-24">
+    <main className="min-h-screen px-6 py-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
+      <div className="flex items-start justify-between mb-8 gap-4 flex-wrap pr-20">
         <div>
           <div className="flex items-center gap-3 mb-1">
             <button
