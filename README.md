@@ -4,7 +4,9 @@ F1 2025 telemetry recorder and web visualizer for EA Sports F1 25.
 
 Record your sessions with the Windows desktop app, then upload the `.f1tel` file to the web dashboard to explore your data - lap times, sector splits, speed traces, tyre and brake temperatures, stint comparisons, and more.
 
-**Live:** https://f1tel.gnuadm.in
+**Gatherer:** Download `F1tel Gatherer` from [Releases](../../releases) and run it.
+
+**Analyzer:** Visit https://f1tel.gnuadm.in to try out the demo or upload your own telemetry data.
 
 ![Lap Summary](src/lap-summary.PNG "Lap Summary")
 
@@ -33,7 +35,7 @@ In EA Sports F1 25:
 
 ### 2. Download the Gatherer
 
-Download `f1tel-gatherer-25.exe` from [Releases](../../releases) and run it. No Python installation needed.
+Download `F1tel Gatherer` from [Releases](../../releases) and run it. No Python installation needed.
 
 Start a session in the game. The app will detect it automatically and begin recording.
 
