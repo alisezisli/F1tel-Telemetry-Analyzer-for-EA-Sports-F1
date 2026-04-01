@@ -111,7 +111,7 @@ export default function HomePage() {
   );
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-4 py-16 gap-20">
+    <main className="min-h-screen flex flex-col items-center px-4 py-16 gap-10">
 
       {/* Hero */}
       <section className="w-full max-w-2xl flex flex-col items-center text-center gap-6">
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* Upload */}
-      <section className="w-full max-w-lg flex flex-col items-center gap-4">
+      <section className="w-full max-w-lg flex flex-col items-center gap-3">
         <div className="w-full flex justify-center">
           <button
             disabled={!!progress}
@@ -195,7 +195,7 @@ export default function HomePage() {
         <div
           className={[
             "w-full rounded-xl border-2 border-dashed transition-colors",
-            "flex flex-col items-center justify-center gap-4 py-16 px-8",
+            "flex flex-col items-center justify-center gap-4 py-10 px-8",
             progress ? "pointer-events-none opacity-60 cursor-default" : "cursor-pointer",
           ].join(" ")}
           style={{

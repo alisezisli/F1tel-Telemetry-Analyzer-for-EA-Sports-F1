@@ -76,7 +76,7 @@ function SessionContent() {
   const { session, player } = data;
 
   return (
-    <main className="min-h-screen px-6 py-8">
+    <main className="min-h-screen px-6 py-8 pr-24">
       {/* Header */}
       <div className="flex items-start justify-between mb-8 gap-4 flex-wrap">
         <div>
@@ -167,7 +167,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
       style={{ background: "var(--card)", border: "1px solid var(--border)" }}
     >
       <h2 className="text-sm font-semibold mb-4" style={{ color: "var(--muted-foreground)" }}>
-        {title.toUpperCase()}
+        {title}
       </h2>
       {children}
     </div>
