@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useT } from "@/lib/i18n";
 import type { F1TelData } from "@/lib/telemetry/types";
 import type { AnalyticsResult } from "@/lib/telemetry/analytics/index";
 import { storeSession } from "@/lib/store";
@@ -43,6 +44,7 @@ const PREVIEW_IMAGES = [
 export default function HomePage() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useT();
   const [dragging, setDragging] = useState(false);
   const [progress, setProgress] = useState<{ pct: number; message: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,11 +60,11 @@ export default function HomePage() {
   const processFile = useCallback(
     (file: File) => {
       if (!file.name.endsWith(".f1tel")) {
-        setError("Please select a .f1tel file.");
+        setError(t("pleaseSelectFile"));
         return;
       }
       setError(null);
-      setProgress({ pct: 0, message: "Reading file..." });
+      setProgress({ pct: 0, message: t("readingFile") });
 
       const worker = new Worker(new URL("@/lib/telemetry/worker.ts", import.meta.url));
 
@@ -86,7 +88,7 @@ export default function HomePage() {
         worker.postMessage({ type: "parse", buffer: buf }, [buf]);
       });
     },
-    [router]
+    [router, t]
   );
 
   const onDrop = useCallback(
@@ -122,18 +124,10 @@ export default function HomePage() {
           </span>
         </div>
         <p className="text-lg leading-relaxed" style={{ color: "var(--foreground)" }}>
-          Telemetry recorder and race analyzer for EA Sports F1 25.
+          {t("tagline")}
         </p>
         <p style={{ color: "var(--muted-foreground)" }} className="text-sm leading-relaxed max-w-xl">
-          Record your sessions with the Windows desktop app. Upload the{" "}
-          <code
-            className="font-mono text-xs px-1 py-0.5 rounded"
-            style={{ background: "var(--muted)", color: "var(--foreground)" }}
-          >
-            .f1tel
-          </code>{" "}
-          file here to explore lap times, sector splits, speed traces, tyre temperatures, stint comparisons, and more.
-          Everything is processed in your browser - your data never leaves your device.
+          {t("description")}
         </p>
         <a
           href="https://github.com/alisezisli/F1tel-Telemetry-Analyzer-for-EA-Sports-F1/releases"
@@ -142,10 +136,10 @@ export default function HomePage() {
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
           style={{ background: "var(--accent)", color: "#fff" }}
         >
-          Download F1tel Gatherer
+          {t("downloadGatherer")}
         </a>
         <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-          Free, open source. Windows only. No Python installation required.
+          {t("freeOpenSource")}
         </p>
       </section>
 
@@ -157,10 +151,10 @@ export default function HomePage() {
             onClick={() => {
               if (progress) return;
               setError(null);
-              setProgress({ pct: 0, message: "Loading demo file..." });
+              setProgress({ pct: 0, message: t("loadingDemo") });
               fetch("/demo.f1tel")
                 .then((r) => {
-                  if (!r.ok) throw new Error("Demo file not found on server.");
+                  if (!r.ok) throw new Error(t("demoNotFound"));
                   return r.arrayBuffer();
                 })
                 .then((buf) => {
@@ -194,7 +188,7 @@ export default function HomePage() {
               background: "transparent",
             }}
           >
-            Try Demo
+            {t("tryDemo")}
           </button>
         </div>
 
@@ -246,13 +240,13 @@ export default function HomePage() {
             <>
               <div className="text-4xl select-none">📁</div>
               <div className="text-center">
-                <p className="text-sm font-medium">Drop your .f1tel file here</p>
+                <p className="text-sm font-medium">{t("dropFile")}</p>
                 <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
-                  or click to browse
+                  {t("orClickToBrowse")}
                 </p>
               </div>
               <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
-                Max 20 MB · F1 2025
+                {t("maxSize")}
               </p>
             </>
           )}
@@ -266,7 +260,7 @@ export default function HomePage() {
       {/* Demo Video */}
       <section className="w-full max-w-3xl flex flex-col gap-4">
         <h2 className="text-base font-semibold text-center" style={{ color: "var(--muted-foreground)" }}>
-          See it in action
+          {t("seeItInAction")}
         </h2>
         <div className="relative w-full aspect-video rounded-xl overflow-hidden" style={{ background: "var(--card)" }}>
           <iframe
@@ -284,7 +278,7 @@ export default function HomePage() {
       {/* Dashboard Preview */}
       <section className="w-full max-w-3xl flex flex-col gap-4">
         <h2 className="text-base font-semibold text-center" style={{ color: "var(--muted-foreground)" }}>
-          Dashboard
+          {t("dashboard")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {PREVIEW_IMAGES.slice(0, 4).map((img) => (

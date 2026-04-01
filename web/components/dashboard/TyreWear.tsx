@@ -5,6 +5,7 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
 import type { TelemetryFrame } from "@/lib/telemetry/types";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   frames: TelemetryFrame[];
@@ -18,6 +19,7 @@ const CORNERS = [
 ] as const;
 
 export function TyreWear({ frames }: Props) {
+  const t = useT();
   const data = useMemo(
     () =>
       frames.map((f, i) => ({
@@ -38,7 +40,7 @@ export function TyreWear({ frames }: Props) {
   if (!hasData) {
     return (
       <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-        No tyre wear data. Wear data is only available in Race sessions.
+        {t("noTyreWearData")}
       </p>
     );
   }

@@ -2,14 +2,16 @@
 
 import type { LapDeltaRow } from "@/lib/telemetry/analytics/index";
 import { fmtLapTime, fmtSectorTime } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   laps: LapDeltaRow[];
 }
 
 export function LapSummaryTable({ laps }: Props) {
+  const t = useT();
   if (laps.length === 0) {
-    return <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>No lap data.</p>;
+    return <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>{t("noLapData")}</p>;
   }
 
   return (
@@ -17,14 +19,14 @@ export function LapSummaryTable({ laps }: Props) {
       <table className="w-full text-sm">
         <thead>
           <tr style={{ color: "var(--muted-foreground)", borderBottom: "1px solid var(--border)" }}>
-            <th className="text-left py-2 pr-4 font-medium">Lap</th>
-            <th className="text-right py-2 px-4 font-medium">Time</th>
-            <th className="text-right py-2 px-4 font-medium">Delta</th>
+            <th className="text-left py-2 pr-4 font-medium">{t("colLap")}</th>
+            <th className="text-right py-2 px-4 font-medium">{t("colTime")}</th>
+            <th className="text-right py-2 px-4 font-medium">{t("colDelta")}</th>
             <th className="text-right py-2 px-4 font-medium">S1</th>
             <th className="text-right py-2 px-4 font-medium">S2</th>
             <th className="text-right py-2 px-4 font-medium">S3</th>
-            <th className="text-right py-2 px-4 font-medium">Pit</th>
-            <th className="text-center py-2 px-4 font-medium">Valid</th>
+            <th className="text-right py-2 px-4 font-medium">{t("colPit")}</th>
+            <th className="text-center py-2 px-4 font-medium">{t("colValid")}</th>
           </tr>
         </thead>
         <tbody>
@@ -47,7 +49,7 @@ export function LapSummaryTable({ laps }: Props) {
                 {fmtLapTime(lap.lap_time_ms)}
               </td>
               <td className="text-right py-2 px-4 font-mono">
-                {lap.delta_ms === null ? "-" : lap.is_best ? "Best" : `+${fmtSectorTime(lap.delta_ms)}`}
+                {lap.delta_ms === null ? "-" : lap.is_best ? t("best") : `+${fmtSectorTime(lap.delta_ms)}`}
               </td>
               <td className="text-right py-2 px-4 font-mono text-xs">
                 {fmtSectorTime(lap.sector1_ms)}

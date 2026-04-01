@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LangProvider } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "F1tel - F1 Telemetry Viewer",
@@ -26,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col"><LangProvider>{children}</LangProvider></body>
     </html>
   );
 }

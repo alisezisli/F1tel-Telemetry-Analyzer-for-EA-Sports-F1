@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import type { Lap } from "@/lib/telemetry/types";
 import { fmtSectorTime } from "@/lib/utils";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   laps: Lap[];
@@ -14,9 +15,10 @@ const SECTOR_COLORS = ["#3b82f6", "#f97316", "#22c55e"]; // S1 blue, S2 orange, 
 const BEST_COLOR = "#a855f7"; // purple — classic F1 best sector color
 
 export function SectorBars({ laps }: Props) {
+  const t = useT();
   const valid = laps.filter((l) => l.valid && l.sector1_ms > 0);
   if (valid.length === 0) {
-    return <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>No valid lap data.</p>;
+    return <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>{t("noValidLapData")}</p>;
   }
 
   const bestS1 = Math.min(...valid.map((l) => l.sector1_ms));
@@ -56,7 +58,7 @@ export function SectorBars({ laps }: Props) {
         return (
           <div key={sector}>
             <p className="text-xs mb-2 font-medium" style={{ color: "var(--muted-foreground)" }}>
-              SECTOR {idx + 1} · Best: {fmtSectorTime(best)}
+              {t("sector")} {idx + 1} · {t("best")}: {fmtSectorTime(best)}
             </p>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={data} barSize={18}>
