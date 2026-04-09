@@ -19,4 +19,4 @@ jobs:
           script: |
             cd /var/www/f1tel.gnuadm.in/app
             git pull origin main
-            /root/deployments/f1tel.sh
+            /root/deployments/f1tel.sh > /dev/null 2>&1
