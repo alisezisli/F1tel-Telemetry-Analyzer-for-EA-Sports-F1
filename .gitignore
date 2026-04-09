@@ -14,3 +14,12 @@ web/.next/
 web/.env
 web/.env.local
 web/.env*.local
+
+CLAUDE.md
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Web - misc
+web/.eslintcache
