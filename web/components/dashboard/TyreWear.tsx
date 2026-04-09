@@ -1,41 +1,81 @@
 "use client";
 
-import { useMemo } from "react";
-import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
-} from "recharts";
+import { useMemo, useCallback } from "react";
+import ReactECharts from "echarts-for-react";
+import * as echarts from "echarts";
+import type { ECharts } from "echarts";
 import type { TelemetryFrame } from "@/lib/telemetry/types";
 import { useT } from "@/lib/i18n";
 
 interface Props {
   frames: TelemetryFrame[];
+  groupId?: string;
 }
 
 const CORNERS = [
-  { key: "tyre_wear_fl", label: "FL", color: "#3b82f6" },
-  { key: "tyre_wear_fr", label: "FR", color: "#22c55e" },
-  { key: "tyre_wear_rl", label: "RL", color: "#f59e0b" },
-  { key: "tyre_wear_rr", label: "RR", color: "#a855f7" },
-] as const;
+  { key: "tyre_wear_fl" as const, label: "FL", color: "#3b82f6" },
+  { key: "tyre_wear_fr" as const, label: "FR", color: "#22c55e" },
+  { key: "tyre_wear_rl" as const, label: "RL", color: "#f59e0b" },
+  { key: "tyre_wear_rr" as const, label: "RR", color: "#a855f7" },
+];
 
-export function TyreWear({ frames }: Props) {
+export function TyreWear({ frames, groupId }: Props) {
   const t = useT();
-  const data = useMemo(
-    () =>
-      frames.map((f, i) => ({
-        i,
-        lap: f.lap,
-        tyre_wear_fl: f.tyre_wear_fl,
-        tyre_wear_fr: f.tyre_wear_fr,
-        tyre_wear_rl: f.tyre_wear_rl,
-        tyre_wear_rr: f.tyre_wear_rr,
-      })),
-    [frames]
-  );
 
   const hasData = frames.some(
     (f) => f.tyre_wear_fl > 0 || f.tyre_wear_fr > 0 || f.tyre_wear_rl > 0 || f.tyre_wear_rr > 0
   );
+
+  const option = useMemo(() => ({
+    backgroundColor: "transparent",
+    grid: { top: 8, right: 16, bottom: 8, left: 48, containLabel: false },
+    xAxis: {
+      type: "value" as const,
+      show: false,
+      min: 0,
+      max: frames.length - 1,
+    },
+    yAxis: {
+      type: "value" as const,
+      min: 0,
+      max: 100,
+      axisLabel: { fontSize: 10, color: "#a1a1aa", formatter: "{value}%" },
+      axisLine: { show: false },
+      splitLine: { lineStyle: { color: "#262626" } },
+    },
+    series: CORNERS.map((c) => ({
+      name: c.label,
+      type: "line" as const,
+      data: frames.map((f, i) => [i, f[c.key]]),
+      lineStyle: { color: c.color, width: 1.5 },
+      itemStyle: { color: c.color },
+      symbol: "none",
+      animation: false,
+    })),
+    tooltip: {
+      trigger: "axis" as const,
+      backgroundColor: "#141414",
+      borderColor: "#262626",
+      textStyle: { color: "#f5f5f5", fontSize: 12 },
+      formatter: (params: unknown) => {
+        const p = params as Array<{ seriesName: string; value: [number, number] }>;
+        const lap = frames[p[0]?.value[0]]?.lap ?? "";
+        const lines = p.map((item) => `${item.seriesName}: ${item.value[1].toFixed(1)}%`);
+        return `Lap ${lap}<br/>${lines.join("<br/>")}`;
+      },
+    },
+    dataZoom: [{ type: "inside" as const, filterMode: "none" as const, zoomOnMouseWheel: "ctrl" as const }],
+  }), [frames]);
+
+  const onChartReady = useCallback((instance: ECharts) => {
+    if (groupId) {
+      (instance as ECharts & { group: string }).group = groupId;
+      echarts.connect(groupId);
+    }
+    const dom = instance.getDom();
+    const onWheel = (e: WheelEvent) => { if (!e.ctrlKey) e.stopImmediatePropagation(); };
+    dom.addEventListener("wheel", onWheel, { capture: true, passive: true });
+  }, [groupId]);
 
   if (!hasData) {
     return (
@@ -55,43 +95,7 @@ export function TyreWear({ frames }: Props) {
           </div>
         ))}
       </div>
-      <ResponsiveContainer width="100%" height={320}>
-        <LineChart data={data}>
-          <XAxis dataKey="i" hide />
-          <YAxis
-            domain={[0, 100]}
-            tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(v) => `${v}%`}
-            width={36}
-          />
-          <Tooltip
-            contentStyle={{
-              background: "var(--card)",
-              border: "1px solid var(--border)",
-              borderRadius: "6px",
-              fontSize: 12,
-            }}
-            labelFormatter={() => ""}
-            formatter={(v, name) => {
-              const c = CORNERS.find((c) => c.key === (name as string));
-              return [`${v}%`, c?.label ?? (name as string)];
-            }}
-          />
-          {CORNERS.map((c) => (
-            <Line
-              key={c.key}
-              type="monotone"
-              dataKey={c.key}
-              stroke={c.color}
-              dot={false}
-              strokeWidth={1.5}
-              isAnimationActive={false}
-            />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
+      <ReactECharts option={option} onChartReady={onChartReady} style={{ width: "100%", height: 320 }} />
     </div>
   );
 }

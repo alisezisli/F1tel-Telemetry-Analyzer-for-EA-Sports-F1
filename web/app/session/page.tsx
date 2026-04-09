@@ -138,27 +138,41 @@ function SessionContent() {
           <SpeedTrace frames={data.telemetry_frames} laps={data.laps} />
         </Card>
 
-        <Card title={t("panelTyreSurfaceTemp")}>
-          <TyreTemperature frames={data.telemetry_frames} />
-        </Card>
-
-        <Card title={t("panelBrakeTemp")}>
-          <BrakeTemperature frames={data.telemetry_frames} />
-        </Card>
-
-        <Card title={t("panelTyreWear")}>
-          <TyreWear frames={data.telemetry_frames} />
-        </Card>
-
         {analytics.stintComparison.length > 1 && (
           <Card title={t("panelStintComparison")}>
             <StintComparison stints={analytics.stintComparison} />
           </Card>
         )}
+
+        <SectionDivider title={t("sectionTyresBrakes")} />
+
+        <Card title={t("panelTyreSurfaceTemp")}>
+          <TyreTemperature frames={data.telemetry_frames} groupId="f1tel-thermal" />
+        </Card>
+
+        <Card title={t("panelBrakeTemp")}>
+          <BrakeTemperature frames={data.telemetry_frames} groupId="f1tel-thermal" />
+        </Card>
+
+        <Card title={t("panelTyreWear")}>
+          <TyreWear frames={data.telemetry_frames} groupId="f1tel-thermal" />
+        </Card>
       </div>
     </main>
   );
 }  // end SessionContent
+
+function SectionDivider({ title }: { title: string }) {
+  return (
+    <div className="flex items-center gap-3 mt-2">
+      <div className="w-1 h-4 rounded-full" style={{ background: "var(--accent)" }} />
+      <span className="text-xs font-semibold tracking-widest" style={{ color: "var(--muted-foreground)" }}>
+        {title}
+      </span>
+      <div className="h-px flex-1" style={{ background: "var(--border)" }} />
+    </div>
+  );
+}
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
