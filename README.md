@@ -8,6 +8,8 @@ Record your sessions with the Windows desktop app, then upload the `.f1tel` file
 
 **Analyzer:** Visit https://f1tel.gnuadm.in to try out the demo or upload your own telemetry data.
 
+[![Support on Patreon](web/public/patreon.png)](https://www.patreon.com/AliSezisli)
+
 ![Lap Summary](src/lap-summary.PNG "Lap Summary")
 
 *Lap Summary*

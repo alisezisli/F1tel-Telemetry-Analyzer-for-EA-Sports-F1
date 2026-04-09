@@ -257,6 +257,21 @@ export default function HomePage() {
         )}
       </section>
 
+      {/* Patreon Banner */}
+      <a
+        href="https://www.patreon.com/AliSezisli"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full max-w-3xl flex justify-center"
+      >
+        <img
+          src="/patreon.png"
+          alt="Support on Patreon"
+          className="rounded-lg"
+          style={{ maxHeight: "80px" }}
+        />
+      </a>
+
       {/* Demo Video */}
       <section className="w-full max-w-3xl flex flex-col gap-4">
         <h2 className="text-base font-semibold text-center" style={{ color: "var(--muted-foreground)" }}>
