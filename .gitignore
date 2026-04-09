@@ -16,6 +16,7 @@ web/.env.local
 web/.env*.local
 
 CLAUDE.md
+.claude/
 
 # OS
 Thumbs.db
