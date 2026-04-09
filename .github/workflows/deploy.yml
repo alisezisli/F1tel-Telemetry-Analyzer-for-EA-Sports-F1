@@ -1,0 +1,22 @@
+name: Go Live
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  golive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Deploy Script
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EV }}
+          username: ${{ secrets.SAHIP }}
+          key: ${{ secrets.KAPI }}
+          port: ${{ secrets.ODA }}
+          script: |
+            cd /var/www/f1tel.gnuadm.in/app
+            git pull origin main
+            /root/deployments/f1tel.sh
