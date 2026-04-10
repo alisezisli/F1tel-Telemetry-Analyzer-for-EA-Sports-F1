@@ -102,6 +102,9 @@ function SessionContent() {
             {session.weather} · Air {session.air_temp_c}°C · Track {session.track_temp_c}°C ·{" "}
             {new Date(data.captured_at).toLocaleString()}
           </p>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
+            {t("zoomHint")}
+          </p>
         </div>
         {analytics.bestTheoreticalLap && (
           <div className="text-right">
