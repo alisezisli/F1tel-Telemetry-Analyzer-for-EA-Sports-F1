@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useRef } from "react";
 import EChartsReactCore from "echarts-for-react/lib/core";
 import { echarts } from "@/lib/echarts";
 import type { TelemetryFrame } from "@/lib/telemetry/types";
@@ -21,8 +21,21 @@ const CORNERS = [
 const IDEAL_MIN = 80;
 const IDEAL_MAX = 110;
 
+const DownloadIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+);
+
 export function TyreTemperature({ frames, groupId }: Props) {
   const t = useT();
+  const echartsRef = useRef<EChartsReactCore>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDownload = useCallback(() => {
+    const url = (echartsRef.current as any)?.getEchartsInstance().getDataURL({ type: "png", backgroundColor: "#0a0a0a", pixelRatio: 2 });
+    if (!url) return;
+    const a = document.createElement("a"); a.href = url; a.download = "tyre-temperature.png"; a.click();
+  }, []);
 
   const option = useMemo(() => ({
     backgroundColor: "transparent",
@@ -99,8 +112,14 @@ export function TyreTemperature({ frames, groupId }: Props) {
         <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>
           · {t("idealRange")}: {IDEAL_MIN}–{IDEAL_MAX}°C ({t("highlighted")})
         </span>
+        <button
+          onClick={handleDownload}
+          className="ml-auto p-1 rounded opacity-80 hover:opacity-100 transition-opacity"
+          style={{ color: "var(--muted-foreground)" }}
+          title={t("downloadPng")}
+        ><DownloadIcon /></button>
       </div>
-      <EChartsReactCore echarts={echarts} option={option} onChartReady={onChartReady} style={{ width: "100%", height: 320 }} />
+      <EChartsReactCore ref={echartsRef} echarts={echarts} option={option} onChartReady={onChartReady} style={{ width: "100%", height: 320 }} />
     </div>
   );
 }

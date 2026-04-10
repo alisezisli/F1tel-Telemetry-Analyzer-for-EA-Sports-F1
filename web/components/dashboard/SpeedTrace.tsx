@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useRef } from "react";
 import EChartsReactCore from "echarts-for-react/lib/core";
 import { echarts } from "@/lib/echarts";
 import type { TelemetryFrame, Lap } from "@/lib/telemetry/types";
+import { useT } from "@/lib/i18n";
 
 interface Props {
   frames: TelemetryFrame[];
@@ -46,7 +47,21 @@ function getDrsRanges(frames: TelemetryFrame[], lap: number): Array<[number, num
   return ranges;
 }
 
+const DownloadIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+);
+
 export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps, onToggleLap }: Props) {
+  const t = useT();
+  const echartsRef = useRef<EChartsReactCore>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleDownload = useCallback(() => {
+    const url = (echartsRef.current as any)?.getEchartsInstance().getDataURL({ type: "png", backgroundColor: "#0a0a0a", pixelRatio: 2 });
+    if (!url) return;
+    const a = document.createElement("a"); a.href = url; a.download = "speed.png"; a.click();
+  }, []);
   const lapInfo = useMemo(() => {
     const m: Record<number, Lap> = {};
     for (const l of laps) m[l.lap_number] = l;
@@ -165,8 +180,15 @@ export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps,
         <span className="text-xs self-center" style={{ color: "var(--muted-foreground)" }}>
           (max {MAX_LAPS})
         </span>
+        <button
+          onClick={handleDownload}
+          className="ml-auto p-1 rounded opacity-80 hover:opacity-100 transition-opacity"
+          style={{ color: "var(--muted-foreground)" }}
+          title={t("downloadPng")}
+        ><DownloadIcon /></button>
       </div>
       <EChartsReactCore
+        ref={echartsRef}
         echarts={echarts}
         option={option}
         notMerge={true}
