@@ -147,6 +147,8 @@ function SessionDashboard({ payload }: { payload: SessionPayload }) {
           <LapSummaryTable laps={analytics.lapDelta} />
         </Card>
 
+        <SectionDivider title={t("sectionOverview")} />
+
         {analytics.bestTheoreticalLap && (
           <Card title={t("panelBestTheoreticalLap")}>
             <BestTheoreticalLap result={analytics.bestTheoreticalLap} />
@@ -156,6 +158,12 @@ function SessionDashboard({ payload }: { payload: SessionPayload }) {
         <Card title={t("panelSectorAnalysis")}>
           <SectorBars laps={data.laps} />
         </Card>
+
+        {analytics.stintComparison.length > 1 && (
+          <Card title={t("panelStintComparison")}>
+            <StintComparison stints={analytics.stintComparison} />
+          </Card>
+        )}
 
         <SectionDivider title={t("sectionLapAnalysis")} />
 
@@ -202,12 +210,6 @@ function SessionDashboard({ payload }: { payload: SessionPayload }) {
             onToggleLap={toggleLap}
           />
         </Card>
-
-        {analytics.stintComparison.length > 1 && (
-          <Card title={t("panelStintComparison")}>
-            <StintComparison stints={analytics.stintComparison} />
-          </Card>
-        )}
 
         <SectionDivider title={t("sectionTyresBrakes")} />
 

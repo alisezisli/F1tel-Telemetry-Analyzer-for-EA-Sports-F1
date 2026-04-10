@@ -17,12 +17,54 @@ interface Props {
 const COLORS = ["#e10600", "#3b82f6", "#22c55e", "#f59e0b", "#a855f7", "#06b6d4"];
 const MAX_LAPS = 5;
 
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function getDrsRanges(frames: TelemetryFrame[], lap: number): Array<[number, number]> {
+  const lapFrames = frames
+    .filter((f) => f.lap === lap)
+    .sort((a, b) => a.lap_distance_m - b.lap_distance_m);
+
+  const ranges: Array<[number, number]> = [];
+  let start: number | null = null;
+
+  for (const f of lapFrames) {
+    const dist = Math.round(f.lap_distance_m / 5) * 5;
+    if (f.drs && start === null) start = dist;
+    if (!f.drs && start !== null) {
+      ranges.push([start, dist]);
+      start = null;
+    }
+  }
+  if (start !== null && lapFrames.length > 0) {
+    ranges.push([start, Math.round(lapFrames[lapFrames.length - 1].lap_distance_m / 5) * 5]);
+  }
+  return ranges;
+}
+
 export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps, onToggleLap }: Props) {
   const lapInfo = useMemo(() => {
     const m: Record<number, Lap> = {};
     for (const l of laps) m[l.lap_number] = l;
     return m;
   }, [laps]);
+
+  // Pre-compute per-lap DRS lookup: dist -> drs boolean
+  const drsLookup = useMemo(() => {
+    const lookup: Record<number, Record<number, boolean>> = {};
+    for (const lap of selectedLaps) {
+      lookup[lap] = {};
+      for (const f of frames.filter((f) => f.lap === lap)) {
+        const dist = Math.round(f.lap_distance_m / 5) * 5;
+        lookup[lap][dist] = f.drs;
+      }
+    }
+    return lookup;
+  }, [frames, selectedLaps]);
 
   const option = useMemo(() => ({
     backgroundColor: "transparent",
@@ -41,17 +83,28 @@ export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps,
       axisLine: { show: false },
       splitLine: { lineStyle: { color: "#262626" } },
     },
-    series: selectedLaps.map((lap, idx) => ({
-      name: `L${lap}`,
-      type: "line" as const,
-      data: frames
-        .filter((f) => f.lap === lap)
-        .map((f) => [Math.round(f.lap_distance_m / 5) * 5, f.speed_kmh]),
-      lineStyle: { color: COLORS[idx % COLORS.length], width: 1.5 },
-      itemStyle: { color: COLORS[idx % COLORS.length] },
-      symbol: "none",
-      animation: false,
-    })),
+    series: selectedLaps.map((lap, idx) => {
+      const color = COLORS[idx % COLORS.length];
+      const drsRanges = getDrsRanges(frames, lap);
+      return {
+        name: `L${lap}`,
+        type: "line" as const,
+        data: frames
+          .filter((f) => f.lap === lap)
+          .map((f) => [Math.round(f.lap_distance_m / 5) * 5, f.speed_kmh]),
+        lineStyle: { color, width: 1.5 },
+        itemStyle: { color },
+        symbol: "none",
+        animation: false,
+        ...(drsRanges.length > 0 ? {
+          markArea: {
+            silent: true,
+            itemStyle: { color: hexToRgba(color, 0.15) },
+            data: drsRanges.map(([s, e]) => [{ xAxis: s }, { xAxis: e }]),
+          },
+        } : {}),
+      };
+    }),
     tooltip: {
       trigger: "axis" as const,
       backgroundColor: "#141414",
@@ -59,13 +112,17 @@ export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps,
       textStyle: { color: "#f5f5f5", fontSize: 12 },
       formatter: (params: unknown) => {
         const p = params as Array<{ seriesName: string; value: [number, number] }>;
-        const dist = p[0]?.value[0] ?? "";
-        const lines = p.map((item) => `${item.seriesName}: ${item.value[1].toFixed(0)} km/h`);
+        const dist = p[0]?.value[0] ?? 0;
+        const lines = p.map((item) => {
+          const lap = parseInt(item.seriesName.replace("L", ""));
+          const drs = drsLookup[lap]?.[dist] ? " · DRS ON" : "";
+          return `${item.seriesName}: ${item.value[1].toFixed(0)} km/h${drs}`;
+        });
         return `${dist}m<br/>${lines.join("<br/>")}`;
       },
     },
     dataZoom: [{ type: "inside" as const, filterMode: "none" as const, zoomOnMouseWheel: "ctrl" as const }],
-  }), [frames, selectedLaps]);
+  }), [frames, selectedLaps, drsLookup]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onChartReady = useCallback((instance: any) => {
