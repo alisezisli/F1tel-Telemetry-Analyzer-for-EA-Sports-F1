@@ -17,7 +17,7 @@ interface Props {
 const COLORS = ["#e10600", "#3b82f6", "#22c55e", "#f59e0b", "#a855f7", "#06b6d4"];
 const MAX_LAPS = 5;
 
-export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps, onToggleLap }: Props) {
+export function ThrottleBrake({ frames, laps, groupId, selectedLaps, availableLaps, onToggleLap }: Props) {
   const lapInfo = useMemo(() => {
     const m: Record<number, Lap> = {};
     for (const l of laps) m[l.lap_number] = l;
@@ -36,22 +36,42 @@ export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps,
     yAxis: {
       type: "value" as const,
       min: 0,
-      max: 360,
-      axisLabel: { fontSize: 10, color: "#a1a1aa" },
+      max: 100,
+      axisLabel: { fontSize: 10, color: "#a1a1aa", formatter: (v: number) => `${v}%` },
       axisLine: { show: false },
       splitLine: { lineStyle: { color: "#262626" } },
     },
-    series: selectedLaps.map((lap, idx) => ({
-      name: `L${lap}`,
-      type: "line" as const,
-      data: frames
-        .filter((f) => f.lap === lap)
-        .map((f) => [Math.round(f.lap_distance_m / 5) * 5, f.speed_kmh]),
-      lineStyle: { color: COLORS[idx % COLORS.length], width: 1.5 },
-      itemStyle: { color: COLORS[idx % COLORS.length] },
-      symbol: "none",
-      animation: false,
-    })),
+    series: selectedLaps.flatMap((lap, idx) => {
+      const color = COLORS[idx % COLORS.length];
+      const lapFrames = frames.filter((f) => f.lap === lap);
+      const byDist: Record<number, TelemetryFrame> = {};
+      for (const f of lapFrames) {
+        const dist = Math.round(f.lap_distance_m / 5) * 5;
+        byDist[dist] = f;
+      }
+      const points = Object.entries(byDist).sort(([a], [b]) => Number(a) - Number(b));
+
+      return [
+        {
+          name: `L${lap} Throttle`,
+          type: "line" as const,
+          data: points.map(([dist, f]) => [Number(dist), Math.round(f.throttle * 100)]),
+          lineStyle: { color, width: 2, type: "solid" as const },
+          itemStyle: { color },
+          symbol: "none",
+          animation: false,
+        },
+        {
+          name: `L${lap} Brake`,
+          type: "line" as const,
+          data: points.map(([dist, f]) => [Number(dist), Math.round(f.brake * 100)]),
+          lineStyle: { color, width: 2, type: "dashed" as const },
+          itemStyle: { color },
+          symbol: "none",
+          animation: false,
+        },
+      ];
+    }),
     tooltip: {
       trigger: "axis" as const,
       backgroundColor: "#141414",
@@ -60,7 +80,7 @@ export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps,
       formatter: (params: unknown) => {
         const p = params as Array<{ seriesName: string; value: [number, number] }>;
         const dist = p[0]?.value[0] ?? "";
-        const lines = p.map((item) => `${item.seriesName}: ${item.value[1].toFixed(0)} km/h`);
+        const lines = p.map((item) => `${item.seriesName}: ${item.value[1]}%`);
         return `${dist}m<br/>${lines.join("<br/>")}`;
       },
     },
@@ -84,7 +104,7 @@ export function SpeedTrace({ frames, laps, groupId, selectedLaps, availableLaps,
 
   return (
     <div>
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4 items-center">
         {availableLaps.map((lap) => {
           const selected = selectedLaps.includes(lap);
           const color = COLORS[selectedLaps.indexOf(lap) % COLORS.length];

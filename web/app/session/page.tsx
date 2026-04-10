@@ -1,10 +1,11 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useT } from "@/lib/i18n";
 import { LapSummaryTable } from "@/components/dashboard/LapSummaryTable";
 import { SpeedTrace } from "@/components/dashboard/SpeedTrace";
+import { ThrottleBrake } from "@/components/dashboard/ThrottleBrake";
 import { SectorBars } from "@/components/dashboard/SectorBars";
 import { TyreTemperature } from "@/components/dashboard/TyreTemperature";
 import { BrakeTemperature } from "@/components/dashboard/BrakeTemperature";
@@ -72,8 +73,25 @@ function SessionContent() {
     );
   }
 
+  return <SessionDashboard payload={payload} />;
+}  // end SessionContent
+
+function SessionDashboard({ payload }: { payload: SessionPayload }) {
+  const router = useRouter();
+  const t = useT();
   const { data, analytics } = payload;
   const { session, player } = data;
+
+  const availableLaps = useMemo(
+    () => [...new Set(data.telemetry_frames.map((f) => f.lap))].sort((a, b) => a - b),
+    [data.telemetry_frames]
+  );
+  const [selectedLaps, setSelectedLaps] = useState<number[]>(() => availableLaps.slice(0, 2));
+  const toggleLap = (lap: number) => {
+    setSelectedLaps((prev) =>
+      prev.includes(lap) ? prev.filter((l) => l !== lap) : [...prev, lap].slice(-5)
+    );
+  };
 
   return (
     <main className="min-h-screen px-6 py-8">
@@ -137,8 +155,28 @@ function SessionContent() {
           <SectorBars laps={data.laps} />
         </Card>
 
+        <SectionDivider title={t("sectionLapAnalysis")} />
+
         <Card title={t("panelSpeedTrace")}>
-          <SpeedTrace frames={data.telemetry_frames} laps={data.laps} />
+          <SpeedTrace
+            frames={data.telemetry_frames}
+            laps={data.laps}
+            groupId="f1tel-trace"
+            selectedLaps={selectedLaps}
+            availableLaps={availableLaps}
+            onToggleLap={toggleLap}
+          />
+        </Card>
+
+        <Card title={t("panelThrottleBrake")}>
+          <ThrottleBrake
+            frames={data.telemetry_frames}
+            laps={data.laps}
+            groupId="f1tel-trace"
+            selectedLaps={selectedLaps}
+            availableLaps={availableLaps}
+            onToggleLap={toggleLap}
+          />
         </Card>
 
         {analytics.stintComparison.length > 1 && (
@@ -163,7 +201,7 @@ function SessionContent() {
       </div>
     </main>
   );
-}  // end SessionContent
+}
 
 function SectionDivider({ title }: { title: string }) {
   return (
