@@ -6,6 +6,7 @@ import { useT } from "@/lib/i18n";
 import { LapSummaryTable } from "@/components/dashboard/LapSummaryTable";
 import { SpeedTrace } from "@/components/dashboard/SpeedTrace";
 import { ThrottleBrake } from "@/components/dashboard/ThrottleBrake";
+import { Steering } from "@/components/dashboard/Steering";
 import { SectorBars } from "@/components/dashboard/SectorBars";
 import { TyreTemperature } from "@/components/dashboard/TyreTemperature";
 import { BrakeTemperature } from "@/components/dashboard/BrakeTemperature";
@@ -170,6 +171,17 @@ function SessionDashboard({ payload }: { payload: SessionPayload }) {
 
         <Card title={t("panelThrottleBrake")}>
           <ThrottleBrake
+            frames={data.telemetry_frames}
+            laps={data.laps}
+            groupId="f1tel-trace"
+            selectedLaps={selectedLaps}
+            availableLaps={availableLaps}
+            onToggleLap={toggleLap}
+          />
+        </Card>
+
+        <Card title={t("panelSteering")}>
+          <Steering
             frames={data.telemetry_frames}
             laps={data.laps}
             groupId="f1tel-trace"
