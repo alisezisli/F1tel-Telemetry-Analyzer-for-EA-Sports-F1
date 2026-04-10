@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useCallback } from "react";
-import ReactECharts from "echarts-for-react";
-import * as echarts from "echarts";
-import type { ECharts } from "echarts";
+import EChartsReactCore from "echarts-for-react/lib/core";
+import { echarts } from "@/lib/echarts";
 import type { TelemetryFrame } from "@/lib/telemetry/types";
 import { useT } from "@/lib/i18n";
 
@@ -73,9 +72,10 @@ export function BrakeTemperature({ frames, groupId }: Props) {
     dataZoom: [{ type: "inside" as const, filterMode: "none" as const, zoomOnMouseWheel: "ctrl" as const }],
   }), [frames]);
 
-  const onChartReady = useCallback((instance: ECharts) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onChartReady = useCallback((instance: any) => {
     if (groupId) {
-      (instance as ECharts & { group: string }).group = groupId;
+      instance.group = groupId;
       echarts.connect(groupId);
     }
     const dom = instance.getDom();
@@ -100,7 +100,7 @@ export function BrakeTemperature({ frames, groupId }: Props) {
           · {t("idealRange")}: {IDEAL_MIN}–{IDEAL_MAX}°C ({t("highlighted")})
         </span>
       </div>
-      <ReactECharts option={option} onChartReady={onChartReady} style={{ width: "100%", height: 320 }} />
+      <EChartsReactCore echarts={echarts} option={option} onChartReady={onChartReady} style={{ width: "100%", height: 320 }} />
     </div>
   );
 }
