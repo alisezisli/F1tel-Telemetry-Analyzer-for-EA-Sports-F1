@@ -5,11 +5,11 @@ import { LangProvider } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "F1tel - F1 Telemetry Viewer",
   description: "Visualise your F1 2025 race telemetry. Upload a .f1tel file and explore lap times, tyre data, speed traces and more.",
-  metadataBase: new URL("https://f1tel.gnuadm.in"),
+  metadataBase: new URL("https://f1tel.linuxhate.com"),
   openGraph: {
     title: "F1tel - F1 Telemetry Viewer",
     description: "Upload your .f1tel file and explore lap times, sector splits, tyre temperatures, speed traces and more. Everything runs in your browser.",
-    url: "https://f1tel.gnuadm.in",
+    url: "https://f1tel.linuxhate.com",
     siteName: "F1tel",
     type: "website",
   },

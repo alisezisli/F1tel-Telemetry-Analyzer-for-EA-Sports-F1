@@ -374,7 +374,7 @@ export default function HomePage() {
       <footer className="flex flex-col items-center gap-2">
         <div className="flex gap-4 text-xs" style={{ color: "var(--muted-foreground)" }}>
           <a href="https://alisezisli.com.tr" target="_blank" rel="noopener noreferrer" className="hover:underline">Ali Sezişli</a>
-          <a href="https://gnuadm.in" target="_blank" rel="noopener noreferrer" className="hover:underline">GNU Admin</a>
+          <a href="https://linuxhate.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Linux Hate</a>
         </div>
         <a
           href="https://github.com/alisezisli/F1tel-Telemetry-Analyzer-for-EA-Sports-F1"
