@@ -187,7 +187,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "dlg_quit_title":    "Unsaved Data",
         "dlg_quit_msg":      "There is unsaved telemetry data.\n\nDo you want to save it?",
         "dlg_about_title":   "About",
-        "dlg_about_msg":     "F1tel Gatherer 25\n\nF1 2025 telemetry recorder. Parse your data at https://f1tel.gnuadm.in\n\nAli Sezi\u015fli - 2026",
+        "dlg_about_msg":     "F1tel Gatherer 25\n\nF1 2025 telemetry recorder. Parse your data at https://f1tel.linuxhate.com\n\nAli Sezi\u015fli - 2026",
         "err_save_failed":   "Save failed",
     },
     "tr": {
@@ -213,7 +213,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "dlg_quit_title":    "Kaydedilmemi\u015f Veri",
         "dlg_quit_msg":      "Kaydedilmemi\u015f telemetri verisi var.\n\nKaydetmek ister misiniz?",
         "dlg_about_title":   "Hakk\u0131nda",
-        "dlg_about_msg":     "F1tel Gatherer 25\n\nF1 2025 telemetri kaydedicisi. Verinizi analiz etmek i\u00e7in: https://f1tel.gnuadm.in\n\nAli Sezi\u015fli - 2026",
+        "dlg_about_msg":     "F1tel Gatherer 25\n\nF1 2025 telemetri kaydedicisi. Verinizi analiz etmek i\u00e7in: https://f1tel.linuxhate.com\n\nAli Sezi\u015fli - 2026",
         "err_save_failed":   "Kay\u0131t ba\u015far\u0131s\u0131z",
     },
 }

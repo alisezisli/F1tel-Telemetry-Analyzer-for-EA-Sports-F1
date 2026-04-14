@@ -6,7 +6,7 @@ Record your sessions with the Windows desktop app, then upload the `.f1tel` file
 
 **Gatherer:** Download `F1tel Gatherer` from [Releases](../../releases) and run it.
 
-**Analyzer:** Visit https://f1tel.gnuadm.in to try out the demo or upload your own telemetry data.
+**Analyzer:** Visit https://f1tel.linuxhate.com to try out the demo or upload your own telemetry data.
 
 [![Support on Patreon](web/public/patreon.png)](https://www.patreon.com/AliSezisli)
 
@@ -45,7 +45,7 @@ When done, click **Save** to save the `.f1tel` file.
 
 ### 3. Analyze
 
-Go to [f1tel.gnuadm.in](https://f1tel.gnuadm.in), drop your file, and visualize your race.
+Go to [f1tel.linuxhate.com](https://f1tel.linuxhate.com), drop your file, and visualize your race.
 
 ![F1 2025 Telemetry Settings](src/in-game-setting.png "F1 2025 Telemetry Settings")
 
